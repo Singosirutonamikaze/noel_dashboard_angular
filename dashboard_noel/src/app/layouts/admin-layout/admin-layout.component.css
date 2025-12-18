@@ -1,0 +1,35 @@
+/* Animation pour le menu déroulant */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.relative > div[class*="absolute"] {
+  animation: slideDown 0.2s ease-out;
+}
+
+/* Amélioration du hover sur les liens de navigation */
+nav a:hover svg {
+  transform: translateX(2px);
+  transition: transform 0.2s ease;
+}
+
+/* Style pour le badge de notification */
+.notification-badge {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
