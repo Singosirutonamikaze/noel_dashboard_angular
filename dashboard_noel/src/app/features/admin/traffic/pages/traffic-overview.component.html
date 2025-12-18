@@ -1,0 +1,193 @@
+<div class="h-full flex flex-col bg-gray-50">
+  <div class="bg-white px-6 py-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Vue d'ensemble du trafic</h1>
+        <p class="text-sm text-gray-600 mt-1">Statistiques et analyses en temps réel</p>
+      </div>
+      <button
+        (click)="onRefresh()"
+        [disabled]="isLoading()"
+        class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors flex items-center gap-2 disabled:opacity-50">
+        <svg class="w-5 h-5" [class.animate-spin]="isLoading()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        Actualiser
+      </button>
+    </div>
+  </div>
+
+  <div class="flex-1 overflow-y-auto p-6">
+    @if (error()) {
+      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+        {{ error() }}
+      </div>
+    }
+
+    @if (isLoading() && !trafficStats() && !userStats() && !incidentStats()) {
+      <div class="flex items-center justify-center h-64">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+      </div>
+    } @else {
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          @if (userStats()) {
+            <div class="bg-white rounded-lg border border-gray-200 p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-600">Total utilisateurs</h3>
+                <svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">{{ userStats()!.totalUsers }}</div>
+              <div class="mt-2 text-sm text-gray-600">
+                <span class="text-emerald-600 font-medium">+{{ userStats()!.newUsersToday }}</span> aujourd'hui
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg border border-gray-200 p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-600">Utilisateurs actifs</h3>
+                <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">{{ userStats()!.activeUsers }}</div>
+              <div class="mt-2 text-sm text-gray-600">
+                <span class="text-blue-600 font-medium">+{{ userStats()!.newUsersThisWeek }}</span> cette semaine
+              </div>
+            </div>
+          }
+
+          @if (incidentStats()) {
+            <div class="bg-white rounded-lg border border-gray-200 p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-600">Incidents actifs</h3>
+                <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">{{ incidentStats()!.activeIncidents }}</div>
+              <div class="mt-2 text-sm text-gray-600">
+                <span class="text-orange-600 font-medium">{{ incidentStats()!.totalIncidents }}</span> au total
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg border border-gray-200 p-6">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-medium text-gray-600">Incidents résolus</h3>
+                <svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">{{ incidentStats()!.resolvedIncidents }}</div>
+              <div class="mt-2 text-sm text-gray-600">
+                Temps moyen: <span class="font-medium">{{ incidentStats()!.averageResolutionTimeMinutes }}min</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (trafficStats()) {
+          <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-lg font-semibold text-gray-900">État actuel du trafic</h2>
+              <span [class]="'px-4 py-2 text-sm font-medium rounded-full ' + getTrafficStatusColor(trafficStats()!.currentTrafficStatus)">
+                {{ getTrafficStatusLabel(trafficStats()!.currentTrafficStatus) }}
+              </span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <div class="text-sm font-medium text-gray-600 mb-2">Moyenne incidents par jour</div>
+                <div class="text-2xl font-bold text-gray-900">{{ trafficStats()!.averageIncidentsPerDay.toFixed(1) }}</div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-600 mb-2">Zones populaires</div>
+                <div class="text-2xl font-bold text-gray-900">{{ trafficStats()!.popularZones.length }}</div>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (userStats()) {
+          <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-6">Répartition par rôle</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              @for (role of userStats()!.usersByRole | keyvalue; track role.key) {
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div>
+                    <div class="text-sm font-medium text-gray-600">{{ getRoleLabel(role.key) }}</div>
+                    <div class="text-2xl font-bold text-gray-900 mt-1">{{ role.value }}</div>
+                  </div>
+                  <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <span class="text-lg font-bold text-emerald-600">{{ role.value }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (incidentStats()) {
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg border border-gray-200 p-6">
+              <h2 class="text-lg font-semibold text-gray-900 mb-6">Incidents cette semaine</h2>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-600">Aujourd'hui</span>
+                  <span class="text-lg font-semibold text-gray-900">{{ incidentStats()!.incidentsReportedToday }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-600">Cette semaine</span>
+                  <span class="text-lg font-semibold text-gray-900">{{ incidentStats()!.incidentsReportedThisWeek }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-600">Ce mois</span>
+                  <span class="text-lg font-semibold text-gray-900">{{ incidentStats()!.incidentsReportedThisMonth }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-lg border border-gray-200 p-6">
+              <h2 class="text-lg font-semibold text-gray-900 mb-6">Statistiques vérification</h2>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-600">Incidents vérifiés</span>
+                  <span class="text-lg font-semibold text-emerald-600">{{ incidentStats()!.verifiedIncidents }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-600">En attente</span>
+                  <span class="text-lg font-semibold text-orange-600">{{ incidentStats()!.activeIncidents }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-gray-600">Résolus</span>
+                  <span class="text-lg font-semibold text-gray-900">{{ incidentStats()!.resolvedIncidents }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (userStats()) {
+          <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-6">Engagement utilisateurs</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="text-center p-4 bg-gray-50 rounded-lg">
+                <div class="text-3xl font-bold text-gray-900">{{ userStats()!.totalReports }}</div>
+                <div class="text-sm text-gray-600 mt-2">Total signalements</div>
+              </div>
+              <div class="text-center p-4 bg-gray-50 rounded-lg">
+                <div class="text-3xl font-bold text-gray-900">{{ userStats()!.usersWithFavoriteRoutes }}</div>
+                <div class="text-sm text-gray-600 mt-2">Routes favorites</div>
+              </div>
+              <div class="text-center p-4 bg-gray-50 rounded-lg">
+                <div class="text-3xl font-bold text-gray-900">{{ userStats()!.usersWithWatchedZones }}</div>
+                <div class="text-sm text-gray-600 mt-2">Zones surveillées</div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

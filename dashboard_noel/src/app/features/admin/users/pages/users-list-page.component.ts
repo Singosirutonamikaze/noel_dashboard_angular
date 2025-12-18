@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
+import { UserListComponent } from '../components/user-list.component';
+
 @Component({
-  selector: 'app-users-list',
+  selector: 'app-users-list-page',
   standalone: true,
-  template: `<div class="p-6"><h1 class="text-2xl font-bold">Utilisateurs</h1><p class="mt-2 text-gray-600">Liste des utilisateurs</p></div>`
+  imports: [UserListComponent],
+  templateUrl: './users-list-page.component.html'
 })
 export class UsersListPageComponent {}
