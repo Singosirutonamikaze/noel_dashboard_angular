@@ -1,27 +1,67 @@
-<div class="bg-white rounded-lg border border-gray-200 p-6">
-  <h3 class="text-lg font-semibold text-gray-900 mb-4">Zones populaires</h3>
-  @if (trafficStats && trafficStats.popularZones.length > 0) {
+<div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm h-full">
+  <h3 class="text-lg font-bold text-gray-900 mb-6 tracking-tight">Zones populaires</h3>
+  
+  @if (trafficStats && trafficStats.popularZones && trafficStats.popularZones.length > 0) {
     <div class="overflow-x-auto">
       <table class="w-full">
-        <thead class="bg-gray-50 border-b border-gray-200">
+        <thead class="bg-linear-to-b from-gray-50 to-gray-100/50 border-b border-gray-200">
           <tr>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Zone</th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Incidents</th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sévérité moyenne</th>
+            <th class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider rounded-tl-lg">Zone</th>
+            <th class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Incidents</th>
+            <th class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider rounded-tr-lg">Sévérité</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200">
-          @for (zone of trafficStats.popularZones; track zone.zoneName) {
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-3 text-sm text-gray-900">{{ zone.zoneName }}</td>
-              <td class="px-4 py-3 text-sm text-gray-600">{{ zone.incidentCount }}</td>
-              <td class="px-4 py-3 text-sm text-gray-600">{{ zone.averageSeverity }}</td>
+        <tbody class="divide-y divide-gray-100">
+          @for (zone of trafficStats.popularZones; track zone.zoneName; let i = $index) {
+            <tr class="hover:bg-linear-to-r hover:from-emerald-50/30 hover:to-transparent transition-all group animate-in fade-in slide-in-from-bottom-2 duration-300" [style.animation-delay]="(i * 0.1) + 's'">
+              <td class="px-4 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-linear-to-br from-emerald-100 to-emerald-200 flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                  </div>
+                  <span class="text-sm font-semibold text-gray-900">{{ zone.zoneName }}</span>
+                </div>
+              </td>
+              <td class="px-4 py-4">
+                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-linear-to-r from-orange-100 to-orange-200 text-orange-700 shadow-sm">
+                  {{ zone.incidentCount }}
+                </span>
+              </td>
+              <td class="px-4 py-4">
+                <span [class]="'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm ' + getSeverityColorClass(zone.averageSeverity)">
+                  {{ getSeverityLabel(zone.averageSeverity) }}
+                </span>
+              </td>
             </tr>
           }
         </tbody>
       </table>
     </div>
+
+    <!-- Summary -->
+    <div class="mt-6 pt-6 border-t border-gray-100">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="p-4 bg-linear-to-br from-gray-50 to-gray-100/50 rounded-xl text-center border border-gray-100">
+          <div class="text-2xl font-bold text-gray-900">{{ getTotalIncidents() }}</div>
+          <div class="text-xs font-medium text-gray-600 mt-1">Total incidents</div>
+        </div>
+        <div class="p-4 bg-linear-to-br from-emerald-50 to-emerald-100/50 rounded-xl text-center border border-emerald-100">
+          <div class="text-2xl font-bold text-emerald-600">{{ getTopZone() }}</div>
+          <div class="text-xs font-medium text-gray-600 mt-1">Zone la plus active</div>
+        </div>
+      </div>
+    </div>
   } @else {
-    <div class="text-center py-8 text-gray-400">Aucune zone populaire détectée</div>
+    <div class="flex flex-col items-center justify-center py-12">
+      <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+        </svg>
+      </div>
+      <div class="text-sm font-medium text-gray-500">Aucune zone populaire détectée</div>
+    </div>
   }
 </div>

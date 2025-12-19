@@ -1,0 +1,77 @@
+<div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+  @if (profile) {
+    <div class="flex items-start gap-4">
+      <!-- Profile Photo -->
+      <div class="relative group">
+        @if (profile.photoUrl) {
+          <img 
+            title="profile image"
+            [src]="profile.photoUrl" 
+            [alt]="profile.firstName + ' ' + profile.lastName"
+            class="w-20 h-20 rounded-full object-cover ring-4 ring-emerald-50 transition-transform duration-300 group-hover:scale-110"
+          />
+        } @else {
+          <div class="w-20 h-20 rounded-full bg-linear-to-br from-emerald-400 via-emerald-500 to-emerald-600 flex items-center justify-center text-white font-bold text-2xl ring-4 ring-emerald-50 transition-transform duration-300 group-hover:scale-110">
+            {{ profile.firstName.charAt(0) }}{{ profile.lastName.charAt(0) }}
+          </div>
+        }
+        
+        @if (editable) {
+          <button
+            title="Button onclick"
+            (click)="onPhotoClick()"
+            class="absolute bottom-0 right-0 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-emerald-600 transition-all duration-200 hover:scale-110"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </button>
+        }
+      </div>
+
+      <!-- Profile Info -->
+      <div class="flex-1 min-w-0">
+        <h3 class="text-xl font-bold text-gray-900 truncate">
+          {{ profile.firstName }} {{ profile.lastName }}
+        </h3>
+        <p class="text-sm text-gray-600 mt-1">{{ profile.email }}</p>
+        
+        <!-- Stats -->
+        <div class="flex items-center gap-4 mt-4">
+          <div class="text-center">
+            <div class="text-lg font-bold text-gray-900">{{ profile.totalReports }}</div>
+            <div class="text-xs text-gray-600">Signalements</div>
+          </div>
+          <div class="w-px h-8 bg-gray-200"></div>
+          <div class="text-center">
+            <div class="text-lg font-bold text-emerald-600">{{ profile.verifiedReports }}</div>
+            <div class="text-xs text-gray-600">Vérifiés</div>
+          </div>
+          <div class="w-px h-8 bg-gray-200"></div>
+          <div class="text-center">
+            <div class="text-lg font-bold text-gray-900">{{ profile.reputationScore }}</div>
+            <div class="text-xs text-gray-600">Réputation</div>
+          </div>
+        </div>
+
+        <!-- Role Badge -->
+        <div class="mt-4">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-linear-to-r from-emerald-100 to-emerald-200 text-emerald-700 shadow-sm">
+            {{ getRoleLabel(profile.role) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      @if (editable) {
+        <button
+          (click)="onEdit()"
+          class="px-4 py-2 bg-linear-to-r from-emerald-500 to-emerald-600 text-white rounded-xl hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 font-medium shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 hover:scale-105"
+        >
+          Modifier
+        </button>
+      }
+    </div>
+  }
+</div>

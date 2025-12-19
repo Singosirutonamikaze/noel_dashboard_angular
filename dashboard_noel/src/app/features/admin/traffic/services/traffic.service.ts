@@ -21,7 +21,10 @@ export class TrafficService {
   public incidentStats$ = this.incidentStatsSubject.asObservable();
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    let token = '';
+    if (typeof window !== 'undefined') {
+      token = localStorage.getItem('token') || '';
+    }
     return new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`

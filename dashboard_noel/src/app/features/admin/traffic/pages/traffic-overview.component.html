@@ -1,126 +1,166 @@
-<div class="h-full flex flex-col bg-gray-50">
-  <div class="bg-white px-6 py-4">
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900">Vue d'ensemble du trafic</h1>
-        <p class="text-sm text-gray-600 mt-1">Statistiques et analyses en temps réel</p>
+<div class="h-full flex flex-col bg-linear-to-b from-gray-50 to-white">
+  
+  <div class="bg-white border-b border-gray-100 shadow-sm">
+    <div class="px-6 py-5">
+      <div class="flex items-center justify-between">
+        <div class="animate-in fade-in slide-in-from-left-4 duration-500">
+          <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Vue d'ensemble du trafic</h1>
+          <p class="text-sm text-gray-600 mt-1.5">Statistiques et analyses en temps réel</p>
+        </div>
+        <button
+          (click)="onRefresh()"
+          [disabled]="isLoading()"
+          class="px-5 py-2.5 bg-linear-to-r from-emerald-500 to-emerald-600 text-white rounded-xl hover:from-emerald-600 hover:to-emerald-700 transition-all duration-500 flex items-center gap-2.5 font-medium shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 animate-in fade-in slide-in-from-right-4">
+          <svg class="w-5 h-5" [class.animate-spin]="isLoading()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          Actualiser
+        </button>
       </div>
-      <button
-        (click)="onRefresh()"
-        [disabled]="isLoading()"
-        class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors flex items-center gap-2 disabled:opacity-50">
-        <svg class="w-5 h-5" [class.animate-spin]="isLoading()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-        </svg>
-        Actualiser
-      </button>
     </div>
   </div>
 
   <div class="flex-1 overflow-y-auto p-6">
     @if (error()) {
-      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+      <div class="bg-linear-to-r from-red-50 to-red-100 border border-red-200 text-red-800 px-4 py-3 rounded-xl mb-6 shadow-sm animate-in fade-in slide-in-from-top-2 duration-300">
         {{ error() }}
       </div>
     }
 
     @if (isLoading() && !trafficStats() && !userStats() && !incidentStats()) {
       <div class="flex items-center justify-center h-64">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+        <div class="relative">
+          <div class="animate-spin rounded-full h-16 w-16 border-4 border-emerald-200"></div>
+          <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-emerald-500 absolute top-0 left-0"></div>
+        </div>
       </div>
     } @else {
       <div class="space-y-6">
+        
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           @if (userStats()) {
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="text-sm font-medium text-gray-600">Total utilisateurs</h3>
-                <svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                </svg>
+            
+            <div class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-lg transition-all duration-500 hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Total utilisateurs</h3>
+                <div class="w-12 h-12 rounded-xl bg-linear-to-br from-emerald-100 to-emerald-200 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+                  <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                  </svg>
+                </div>
               </div>
-              <div class="text-3xl font-bold text-gray-900">{{ userStats()!.totalUsers }}</div>
-              <div class="mt-2 text-sm text-gray-600">
-                <span class="text-emerald-600 font-medium">+{{ userStats()!.newUsersToday }}</span> aujourd'hui
+              <div class="text-3xl font-bold text-gray-900 mb-2">{{ userStats()!.totalUsers }}</div>
+              <div class="flex items-center gap-1 text-sm">
+                <span class="text-emerald-600 font-semibold">+{{ userStats()!.newUsersToday }}</span>
+                <span class="text-gray-600">aujourd'hui</span>
               </div>
             </div>
 
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="text-sm font-medium text-gray-600">Utilisateurs actifs</h3>
-                <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+            
+            <div class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-lg transition-all duration-500 hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 delay-75">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Utilisateurs actifs</h3>
+                <div class="w-12 h-12 rounded-xl bg-linear-to-br from-blue-100 to-blue-200 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
               </div>
-              <div class="text-3xl font-bold text-gray-900">{{ userStats()!.activeUsers }}</div>
-              <div class="mt-2 text-sm text-gray-600">
-                <span class="text-blue-600 font-medium">+{{ userStats()!.newUsersThisWeek }}</span> cette semaine
+              <div class="text-3xl font-bold text-gray-900 mb-2">{{ userStats()!.activeUsers }}</div>
+              <div class="flex items-center gap-1 text-sm">
+                <span class="text-blue-600 font-semibold">+{{ userStats()!.newUsersThisWeek }}</span>
+                <span class="text-gray-600">cette semaine</span>
               </div>
             </div>
           }
 
           @if (incidentStats()) {
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="text-sm font-medium text-gray-600">Incidents actifs</h3>
-                <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
+            
+            <div class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-lg transition-all duration-500 hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 delay-150">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Incidents actifs</h3>
+                <div class="w-12 h-12 rounded-xl bg-linear-to-br from-orange-100 to-orange-200 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+                  <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                  </svg>
+                </div>
               </div>
-              <div class="text-3xl font-bold text-gray-900">{{ incidentStats()!.activeIncidents }}</div>
-              <div class="mt-2 text-sm text-gray-600">
-                <span class="text-orange-600 font-medium">{{ incidentStats()!.totalIncidents }}</span> au total
+              <div class="text-3xl font-bold text-gray-900 mb-2">{{ incidentStats()!.activeIncidents }}</div>
+              <div class="flex items-center gap-1 text-sm">
+                <span class="text-orange-600 font-semibold">{{ incidentStats()!.totalIncidents }}</span>
+                <span class="text-gray-600">au total</span>
               </div>
             </div>
 
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="text-sm font-medium text-gray-600">Incidents résolus</h3>
-                <svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+            
+            <div class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-lg transition-all duration-500 hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 delay-200">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Incidents résolus</h3>
+                <div class="w-12 h-12 rounded-xl bg-linear-to-br from-emerald-100 to-emerald-200 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+                  <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
               </div>
-              <div class="text-3xl font-bold text-gray-900">{{ incidentStats()!.resolvedIncidents }}</div>
-              <div class="mt-2 text-sm text-gray-600">
-                Temps moyen: <span class="font-medium">{{ incidentStats()!.averageResolutionTimeMinutes }}min</span>
+              <div class="text-3xl font-bold text-gray-900 mb-2">{{ incidentStats()!.resolvedIncidents }}</div>
+              <div class="flex items-center gap-1 text-sm">
+                <span class="text-gray-600">Temps moyen:</span>
+                <span class="font-semibold text-gray-900">{{ incidentStats()!.averageResolutionTimeMinutes }}min</span>
               </div>
             </div>
           }
         </div>
 
+        
         @if (trafficStats()) {
-          <div class="bg-white rounded-lg border border-gray-200 p-6">
+          <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm animate-in fade-in slide-in-from-bottom-4 delay-300">
             <div class="flex items-center justify-between mb-6">
-              <h2 class="text-lg font-semibold text-gray-900">État actuel du trafic</h2>
-              <span [class]="'px-4 py-2 text-sm font-medium rounded-full ' + getTrafficStatusColor(trafficStats()!.currentTrafficStatus)">
+              <h2 class="text-lg font-bold text-gray-900 tracking-tight">État actuel du trafic</h2>
+              <span [class]="'px-4 py-2 text-sm font-semibold rounded-xl shadow-sm transition-all duration-200 hover:scale-105 ' + getTrafficStatusColor(trafficStats()!.currentTrafficStatus)">
                 {{ getTrafficStatusLabel(trafficStats()!.currentTrafficStatus) }}
               </span>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <div class="text-sm font-medium text-gray-600 mb-2">Moyenne incidents par jour</div>
-                <div class="text-2xl font-bold text-gray-900">{{ trafficStats()!.averageIncidentsPerDay.toFixed(1) }}</div>
+              <div class="p-5 bg-linear-to-br from-gray-50 to-gray-100/50 rounded-xl border border-gray-100">
+                <div class="text-sm font-semibold text-gray-600 mb-2 uppercase tracking-wider">Moyenne incidents par jour</div>
+                <div class="text-3xl font-bold text-gray-900">{{ trafficStats()!.averageIncidentsPerDay.toFixed(1) }}</div>
               </div>
-              <div>
-                <div class="text-sm font-medium text-gray-600 mb-2">Zones populaires</div>
-                <div class="text-2xl font-bold text-gray-900">{{ trafficStats()!.popularZones.length }}</div>
+              <div class="p-5 bg-linear-to-br from-gray-50 to-gray-100/50 rounded-xl border border-gray-100">
+                <div class="text-sm font-semibold text-gray-600 mb-2 uppercase tracking-wider">Zones populaires</div>
+                <div class="text-3xl font-bold text-gray-900">{{ trafficStats()!.popularZones.length }}</div>
               </div>
             </div>
           </div>
         }
 
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <div class="animate-in fade-in slide-in-from-left-4 delay-400">
+            <app-traffic-chart [incidentStats]="incidentStats()"></app-traffic-chart>
+          </div>
+
+          
+          <div class="animate-in fade-in slide-in-from-right-4 delay-400">
+            <app-traffic-table [trafficStats]="trafficStats()"></app-traffic-table>
+          </div>
+        </div>
+
+        
         @if (userStats()) {
-          <div class="bg-white rounded-lg border border-gray-200 p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-6">Répartition par rôle</h2>
+          <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm animate-in fade-in slide-in-from-bottom-4 delay-500">
+            <h2 class="text-lg font-bold text-gray-900 mb-6 tracking-tight">Répartition par rôle</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              @for (role of userStats()!.usersByRole | keyvalue; track role.key) {
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                  <div>
-                    <div class="text-sm font-medium text-gray-600">{{ getRoleLabel(role.key) }}</div>
-                    <div class="text-2xl font-bold text-gray-900 mt-1">{{ role.value }}</div>
-                  </div>
-                  <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
-                    <span class="text-lg font-bold text-emerald-600">{{ role.value }}</span>
+              @for (role of userStats()!.usersByRole | keyvalue; track role.key; let i = $index) {
+                <div class="group p-5 bg-linear-to-br from-gray-50 to-gray-100/50 rounded-xl border border-gray-100 transition-all duration-300 hover:shadow-md hover:scale-[1.02]" [style.animation]="'fadeInUp 0.3s ease-in-out ' + (i * 0.1) + 's backwards;'">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-sm font-semibold text-gray-600 mb-1">{{ getRoleLabel(role.key) }}</div>
+                      <div class="text-3xl font-bold text-gray-900">{{ role.value }}</div>
+                    </div>
+                    <div class="w-14 h-14 rounded-xl bg-linear-to-br from-emerald-100 to-emerald-200 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">
+                      <span class="text-xl font-bold text-emerald-600">{{ role.value }}</span>
+                    </div>
                   </div>
                 </div>
               }
@@ -130,59 +170,62 @@
 
         @if (incidentStats()) {
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 class="text-lg font-semibold text-gray-900 mb-6">Incidents cette semaine</h2>
+            
+            <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm animate-in fade-in slide-in-from-left-4 delay-600">
+              <h2 class="text-lg font-bold text-gray-900 mb-6 tracking-tight">Incidents cette semaine</h2>
               <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-600">Aujourd'hui</span>
-                  <span class="text-lg font-semibold text-gray-900">{{ incidentStats()!.incidentsReportedToday }}</span>
+                <div class="flex items-center justify-between p-4 bg-linear-to-br from-gray-50 to-gray-100/50 rounded-xl border border-gray-100 transition-all duration-200 hover:scale-[1.02]">
+                  <span class="text-sm font-medium text-gray-600">Aujourd'hui</span>
+                  <span class="text-2xl font-bold text-gray-900">{{ incidentStats()!.incidentsReportedToday }}</span>
                 </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-600">Cette semaine</span>
-                  <span class="text-lg font-semibold text-gray-900">{{ incidentStats()!.incidentsReportedThisWeek }}</span>
+                <div class="flex items-center justify-between p-4 bg-linear-to-br from-gray-50 to-gray-100/50 rounded-xl border border-gray-100 transition-all duration-200 hover:scale-[1.02]">
+                  <span class="text-sm font-medium text-gray-600">Cette semaine</span>
+                  <span class="text-2xl font-bold text-gray-900">{{ incidentStats()!.incidentsReportedThisWeek }}</span>
                 </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-600">Ce mois</span>
-                  <span class="text-lg font-semibold text-gray-900">{{ incidentStats()!.incidentsReportedThisMonth }}</span>
+                <div class="flex items-center justify-between p-4 bg-linear-to-br from-gray-50 to-gray-100/50 rounded-xl border border-gray-100 transition-all duration-200 hover:scale-[1.02]">
+                  <span class="text-sm font-medium text-gray-600">Ce mois</span>
+                  <span class="text-2xl font-bold text-gray-900">{{ incidentStats()!.incidentsReportedThisMonth }}</span>
                 </div>
               </div>
             </div>
 
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 class="text-lg font-semibold text-gray-900 mb-6">Statistiques vérification</h2>
+            
+            <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm animate-in fade-in slide-in-from-right-4 delay-600">
+              <h2 class="text-lg font-bold text-gray-900 mb-6 tracking-tight">Statistiques vérification</h2>
               <div class="space-y-4">
-                <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-600">Incidents vérifiés</span>
-                  <span class="text-lg font-semibold text-emerald-600">{{ incidentStats()!.verifiedIncidents }}</span>
+                <div class="flex items-center justify-between p-4 bg-linear-to-br from-emerald-50 to-emerald-100/50 rounded-xl border border-emerald-100 transition-all duration-200 hover:scale-[1.02]">
+                  <span class="text-sm font-medium text-gray-600">Incidents vérifiés</span>
+                  <span class="text-2xl font-bold text-emerald-600">{{ incidentStats()!.verifiedIncidents }}</span>
                 </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-600">En attente</span>
-                  <span class="text-lg font-semibold text-orange-600">{{ incidentStats()!.activeIncidents }}</span>
+                <div class="flex items-center justify-between p-4 bg-linear-to-br from-orange-50 to-orange-100/50 rounded-xl border border-orange-100 transition-all duration-200 hover:scale-[1.02]">
+                  <span class="text-sm font-medium text-gray-600">En attente</span>
+                  <span class="text-2xl font-bold text-orange-600">{{ incidentStats()!.activeIncidents }}</span>
                 </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-600">Résolus</span>
-                  <span class="text-lg font-semibold text-gray-900">{{ incidentStats()!.resolvedIncidents }}</span>
+                <div class="flex items-center justify-between p-4 bg-linear-to-br from-gray-50 to-gray-100/50 rounded-xl border border-gray-100 transition-all duration-200 hover:scale-[1.02]">
+                  <span class="text-sm font-medium text-gray-600">Résolus</span>
+                  <span class="text-2xl font-bold text-gray-900">{{ incidentStats()!.resolvedIncidents }}</span>
                 </div>
               </div>
             </div>
           </div>
         }
 
+        
         @if (userStats()) {
-          <div class="bg-white rounded-lg border border-gray-200 p-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-6">Engagement utilisateurs</h2>
+          <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500 delay-700">
+            <h2 class="text-lg font-bold text-gray-900 mb-6 tracking-tight">Engagement utilisateurs</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div class="text-center p-4 bg-gray-50 rounded-lg">
-                <div class="text-3xl font-bold text-gray-900">{{ userStats()!.totalReports }}</div>
-                <div class="text-sm text-gray-600 mt-2">Total signalements</div>
+              <div class="group text-center p-6 bg-linear-to-br from-emerald-50 to-emerald-100/50 rounded-xl border border-emerald-100 transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
+                <div class="text-4xl font-bold text-gray-900 mb-2">{{ userStats()!.totalReports }}</div>
+                <div class="text-sm font-medium text-gray-600">Total signalements</div>
               </div>
-              <div class="text-center p-4 bg-gray-50 rounded-lg">
-                <div class="text-3xl font-bold text-gray-900">{{ userStats()!.usersWithFavoriteRoutes }}</div>
-                <div class="text-sm text-gray-600 mt-2">Routes favorites</div>
+              <div class="group text-center p-6 bg-linear-to-br from-blue-50 to-blue-100/50 rounded-xl border border-blue-100 transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
+                <div class="text-4xl font-bold text-gray-900 mb-2">{{ userStats()!.usersWithFavoriteRoutes }}</div>
+                <div class="text-sm font-medium text-gray-600">Routes favorites</div>
               </div>
-              <div class="text-center p-4 bg-gray-50 rounded-lg">
-                <div class="text-3xl font-bold text-gray-900">{{ userStats()!.usersWithWatchedZones }}</div>
-                <div class="text-sm text-gray-600 mt-2">Zones surveillées</div>
+              <div class="group text-center p-6 bg-linear-to-br from-purple-50 to-purple-100/50 rounded-xl border border-purple-100 transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
+                <div class="text-4xl font-bold text-gray-900 mb-2">{{ userStats()!.usersWithWatchedZones }}</div>
+                <div class="text-sm font-medium text-gray-600">Zones surveillées</div>
               </div>
             </div>
           </div>
@@ -191,3 +234,16 @@
     }
   </div>
 </div>
+
+<style>
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

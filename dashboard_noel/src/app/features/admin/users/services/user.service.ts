@@ -18,11 +18,15 @@ export class UserService {
   public stats$ = this.statsSubject.asObservable();
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    });
+    let token = '';
+    if (typeof window !== 'undefined') {
+      token = localStorage.getItem('token') || '';
+    }
+    const headers: any = { 'Content-Type': 'application/json' };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return new HttpHeaders(headers);
   }
 
   getAllUsers(): Observable<User[]> {

@@ -1,10 +1,22 @@
-<div class="bg-white rounded-lg border border-gray-200 p-6">
-  <h3 class="text-lg font-semibold text-gray-900 mb-4">Graphique des incidents</h3>
-  @if (incidentStats) {
-    <div class="space-y-3">
-      <div class="text-sm text-gray-600">Composant graphique à venir</div>
+<div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm h-full">
+  <h3 class="text-lg font-bold text-gray-900 mb-6 tracking-tight">Incidents par type</h3>
+  <ng-container *ngIf="pieChartData && pieChartData.labels?.length">
+    <div class="chart-style">
+      <canvas baseChart
+        [data]="pieChartData"
+        [type]="pieChartType"
+        [options]="{ responsive: true, plugins: { legend: { position: 'bottom' } } }">
+      </canvas>
     </div>
-  } @else {
-    <div class="text-center py-8 text-gray-400">Aucune donnée disponible</div>
-  }
+  </ng-container>
+  <ng-container *ngIf="!pieChartData || !pieChartData.labels?.length">
+    <div class="flex flex-col items-center justify-center py-12">
+      <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+      </div>
+      <div class="text-sm font-medium text-gray-500">Aucune donnée disponible</div>
+    </div>
+  </ng-container>
 </div>
